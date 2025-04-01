@@ -40,6 +40,16 @@ export const getImageUrl = (path: string | null, size: string = 'w500'): string 
   return `${IMAGE_BASE_URL}/${size}${path}`;
 };
 
+// Helper function to handle API errors
+const handleApiError = (error: any, context: string) => {
+  console.error(`Error ${context}:`, error);
+  if (error.response) {
+    console.error('Status:', error.response.status);
+    console.error('Data:', error.response.data);
+  }
+  throw error;
+};
+
 // Search for directors (people)
 export const searchDirectors = async (query: string): Promise<SearchResult[]> => {
   if (!query.trim()) return [];
@@ -49,7 +59,10 @@ export const searchDirectors = async (query: string): Promise<SearchResult[]> =>
       `${BASE_URL}/search/person?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`
     );
     
-    if (!response.ok) throw new Error('Failed to fetch search results');
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to fetch search results: ${errorData.status_message || response.statusText}`);
+    }
     
     const data = await response.json();
     
@@ -58,7 +71,7 @@ export const searchDirectors = async (query: string): Promise<SearchResult[]> =>
       (person: SearchResult) => person.known_for_department === 'Directing'
     );
   } catch (error) {
-    console.error('Error searching directors:', error);
+    handleApiError(error, 'searching directors');
     return [];
   }
 };
@@ -70,11 +83,14 @@ export const getDirectorDetails = async (id: number): Promise<Director | null> =
       `${BASE_URL}/person/${id}?api_key=${API_KEY}&language=en-US`
     );
     
-    if (!response.ok) throw new Error('Failed to fetch director details');
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to fetch director details: ${errorData.status_message || response.statusText}`);
+    }
     
     return await response.json();
   } catch (error) {
-    console.error('Error fetching director details:', error);
+    handleApiError(error, 'fetching director details');
     return null;
   }
 };
@@ -86,14 +102,17 @@ export const getDirectorFilmography = async (id: number): Promise<Film[]> => {
       `${BASE_URL}/person/${id}/movie_credits?api_key=${API_KEY}&language=en-US`
     );
     
-    if (!response.ok) throw new Error('Failed to fetch filmography');
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to fetch filmography: ${errorData.status_message || response.statusText}`);
+    }
     
     const data = await response.json();
     
     // Only return films where they were the director
     return data.crew.filter((job: any) => job.job === 'Director');
   } catch (error) {
-    console.error('Error fetching filmography:', error);
+    handleApiError(error, 'fetching filmography');
     return [];
   }
 };
@@ -105,11 +124,34 @@ export const getFilmDetails = async (id: number): Promise<Film | null> => {
       `${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=en-US`
     );
     
-    if (!response.ok) throw new Error('Failed to fetch film details');
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to fetch film details: ${errorData.status_message || response.statusText}`);
+    }
     
     return await response.json();
   } catch (error) {
-    console.error('Error fetching film details:', error);
+    handleApiError(error, 'fetching film details');
     return null;
+  }
+};
+
+// Get similar films
+export const getSimilarFilms = async (id: number): Promise<Film[]> => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/movie/${id}/similar?api_key=${API_KEY}&language=en-US&page=1`
+    );
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Failed to fetch similar films: ${errorData.status_message || response.statusText}`);
+    }
+    
+    const data = await response.json();
+    return data.results;
+  } catch (error) {
+    handleApiError(error, 'fetching similar films');
+    return [];
   }
 };
