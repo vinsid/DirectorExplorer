@@ -1,8 +1,15 @@
-
-// Use the provided TMDB API key
-const API_KEY = 'e4bccae285ae9612ecadc0525e7a4bf4';
+// Use the provided TMDB API key as a bearer token
+const API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGJjY2FlMjg1YWU5NjEyZWNhZGMwNTI1ZTdhNGJmNCIsIm5iZiI6MTc0MzQ4MzQzNC4wOCwic3ViIjoiNjdlYjcyMmFiNmRjOWUwYTg3N2E5NmRiIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.6yYZenzJx0Rtod59bDuXv4seaWhOnDfUlLVsHUZ2P0M';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
+
+// Common fetch options with authorization header
+const fetchOptions = {
+  headers: {
+    'Authorization': `Bearer ${API_TOKEN}`,
+    'Content-Type': 'application/json'
+  }
+};
 
 // Types for our API responses
 export interface Director {
@@ -16,39 +23,7 @@ export interface Director {
   known_for_department: string;
 }
 
-export interface Film {
-  id: number;
-  title: string;
-  poster_path: string | null;
-  release_date: string;
-  overview: string;
-  vote_average: number;
-  runtime: number | null;
-  genres: { id: number; name: string }[];
-}
-
-export interface SearchResult {
-  id: number;
-  name: string;
-  profile_path: string | null;
-  known_for_department: string;
-}
-
-// Helper function to get image URL
-export const getImageUrl = (path: string | null, size: string = 'w500'): string => {
-  if (!path) return '/placeholder.svg';
-  return `${IMAGE_BASE_URL}/${size}${path}`;
-};
-
-// Helper function to handle API errors
-const handleApiError = (error: any, context: string) => {
-  console.error(`Error ${context}:`, error);
-  if (error.response) {
-    console.error('Status:', error.response.status);
-    console.error('Data:', error.response.data);
-  }
-  throw error;
-};
+// ... existing code ...
 
 // Search for directors (people)
 export const searchDirectors = async (query: string): Promise<SearchResult[]> => {
@@ -56,7 +31,8 @@ export const searchDirectors = async (query: string): Promise<SearchResult[]> =>
   
   try {
     const response = await fetch(
-      `${BASE_URL}/search/person?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=en-US&page=1`
+      `${BASE_URL}/search/person?query=${encodeURIComponent(query)}&language=en-US&page=1`,
+      fetchOptions
     );
     
     if (!response.ok) {
@@ -80,7 +56,8 @@ export const searchDirectors = async (query: string): Promise<SearchResult[]> =>
 export const getDirectorDetails = async (id: number): Promise<Director | null> => {
   try {
     const response = await fetch(
-      `${BASE_URL}/person/${id}?api_key=${API_KEY}&language=en-US`
+      `${BASE_URL}/person/${id}?language=en-US`,
+      fetchOptions
     );
     
     if (!response.ok) {
@@ -99,7 +76,8 @@ export const getDirectorDetails = async (id: number): Promise<Director | null> =
 export const getDirectorFilmography = async (id: number): Promise<Film[]> => {
   try {
     const response = await fetch(
-      `${BASE_URL}/person/${id}/movie_credits?api_key=${API_KEY}&language=en-US`
+      `${BASE_URL}/person/${id}/movie_credits?language=en-US`,
+      fetchOptions
     );
     
     if (!response.ok) {
@@ -121,7 +99,8 @@ export const getDirectorFilmography = async (id: number): Promise<Film[]> => {
 export const getFilmDetails = async (id: number): Promise<Film | null> => {
   try {
     const response = await fetch(
-      `${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=en-US`
+      `${BASE_URL}/movie/${id}?language=en-US`,
+      fetchOptions
     );
     
     if (!response.ok) {
@@ -140,7 +119,8 @@ export const getFilmDetails = async (id: number): Promise<Film | null> => {
 export const getSimilarFilms = async (id: number): Promise<Film[]> => {
   try {
     const response = await fetch(
-      `${BASE_URL}/movie/${id}/similar?api_key=${API_KEY}&language=en-US&page=1`
+      `${BASE_URL}/movie/${id}/similar?language=en-US&page=1`,
+      fetchOptions
     );
     
     if (!response.ok) {
