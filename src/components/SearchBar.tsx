@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SearchResult, searchDirectors } from '../utils/api';
 import { Search, X, Loader2 } from 'lucide-react';
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "../hooks/use-toast";
 
 const SearchBar: React.FC = () => {
   const [query, setQuery] = useState('');

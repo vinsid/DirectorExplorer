@@ -9,11 +9,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "noImplicitAny": false,
-    "noUnusedParameters": false,
-    "skipLibCheck": true,
-    "allowJs": true,
-    "noUnusedLocals": false,
-    "strictNullChecks": false
+    "skipLibCheck": true, // Shared optimization
+    "esModuleInterop": true, // Shared interop
+    "forceConsistentCasingInFileNames": true // Shared consistency
   }
 }

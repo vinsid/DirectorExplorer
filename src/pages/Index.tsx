@@ -3,8 +3,11 @@ import React, { useEffect } from 'react';
 import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
 import { Film } from 'lucide-react';
+import { useTheme } from '../hooks/use-theme';
 
 const Index: React.FC = () => {
+  const { theme } = useTheme();
+  
   useEffect(() => {
     document.title = 'Director Explorer - Search for Film Directors';
   }, []);
@@ -23,9 +26,7 @@ const Index: React.FC = () => {
           <p className="text-lg md:text-xl text-muted-foreground mb-8 animate-slide-up">
             Discover the visionaries behind your favorite films
           </p>
-          <div className="animate-slide-up shadow-lg">
-            <SearchBar />
-          </div>
+          <SearchBar />
         </div>
         
         <div className="mt-12 max-w-4xl mx-auto text-center animate-fade-in space-y-8">

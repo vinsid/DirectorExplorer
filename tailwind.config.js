@@ -1,16 +1,11 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
-  darkMode: ["class"],
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: 'class',
   content: [
     './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        montserrat: ['Montserrat', 'sans-serif'],
-      },
       colors: {
         'cinema': '#e11d48', // Red color for cinema elements
         'director-light': '#1e293b', // Dark blue for light mode
@@ -44,6 +39,4 @@ const config: Config = {
     },
   },
   plugins: [],
-};
-
-export default config;
+}
