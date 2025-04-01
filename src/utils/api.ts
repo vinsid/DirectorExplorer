@@ -1,3 +1,4 @@
+
 // Use the provided TMDB API key as a bearer token
 const API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGJjY2FlMjg1YWU5NjEyZWNhZGMwNTI1ZTdhNGJmNCIsIm5iZiI6MTc0MzQ4MzQzNC4wOCwic3ViIjoiNjdlYjcyMmFiNmRjOWUwYTg3N2E5NmRiIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.6yYZenzJx0Rtod59bDuXv4seaWhOnDfUlLVsHUZ2P0M';
 const BASE_URL = 'https://api.themoviedb.org/3';
@@ -23,7 +24,39 @@ export interface Director {
   known_for_department: string;
 }
 
-// ... existing code ...
+export interface Film {
+  id: number;
+  title: string;
+  poster_path: string | null;
+  release_date: string;
+  overview: string;
+  vote_average: number;
+  runtime: number | null;
+  genres: { id: number; name: string }[];
+}
+
+export interface SearchResult {
+  id: number;
+  name: string;
+  profile_path: string | null;
+  known_for_department: string;
+}
+
+// Helper function to get image URL - ensure export is maintained
+export const getImageUrl = (path: string | null, size: string = 'w500'): string => {
+  if (!path) return '/placeholder.svg';
+  return `${IMAGE_BASE_URL}/${size}${path}`;
+};
+
+// Helper function to handle API errors
+const handleApiError = (error: any, context: string) => {
+  console.error(`Error ${context}:`, error);
+  if (error.response) {
+    console.error('Status:', error.response.status);
+    console.error('Data:', error.response.data);
+  }
+  throw error;
+};
 
 // Search for directors (people)
 export const searchDirectors = async (query: string): Promise<SearchResult[]> => {
