@@ -1,6 +1,6 @@
 
 // Use the provided TMDB API key as a bearer token
-const API_TOKEN = '02ad371eb8303238f3fe64ab8de8654b';
+const API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwMmFkMzcxZWI4MzAzMjM4ZjNmZTY0YWI4ZGU4NjU0YiIsIm5iZiI6MTc0MzQ4MzQzNC4wOCwic3ViIjoiNjdlYjcyMmFiNmRjOWUwYTg3N2E5NmRiIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.-Bv4zDNXWzVvLeim2a7XRtZbLuvZdp7K79EvxGFC8is';
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p';
 
