@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: ""
+**URL**: "https://director-explorer.vercel.app/"
 
 **Use your preferred IDE**
 
